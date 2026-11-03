@@ -653,6 +653,8 @@ footer p{max-width:1100px;margin-top:10px}
 
 <script>
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (!location.hash) scrollTo(0, 0);
 window.addEventListener('load', () => { setTimeout(() => { $('#loader').classList.add('gone'); document.body.classList.add('ready'); }, 700); });
 setTimeout(() => { $('#loader').classList.add('gone'); document.body.classList.add('ready'); }, 3500);
 const nav = $('#nav');
@@ -686,7 +688,7 @@ const paint = i => { cur = i; const f = pfig[i]; if (!f) return; const ci = +f.d
   chips.forEach((b, j) => b.classList.toggle('on', j === ci));
   $('#pch').textContent = f.dataset.chn; $('#pcap').textContent = f.querySelector('figcaption').textContent;
   $('#pct').textContent = (i - firstOf[ci] + 1) + ' / ' + (firstOf[ci + 1] > 0 ? firstOf[ci + 1] - firstOf[ci] : pfig.length - firstOf[ci]);
-  chips[ci].scrollIntoView({ block: 'nearest', inline: 'nearest' }); };
+  const pc = chips[ci].parentElement; pc.scrollTo({ left: chips[ci].offsetLeft - pc.offsetLeft - 16, behavior: 'smooth' }); };  // scroll the chip row only, never the page
 let pt; pst.addEventListener('scroll', () => { clearTimeout(pt); pt = setTimeout(() => paint(Math.round(pst.scrollLeft / pst.clientWidth)), 60); }, { passive: true });
 chips.forEach((b, i) => b.onclick = () => goPh(firstOf[i]));
 $('#photos .pnav.p').onclick = () => goPh(cur - 1);
